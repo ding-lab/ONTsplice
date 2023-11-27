@@ -1,0 +1,15 @@
+
+yaml for for conda doesn't work
+https://github.com/BrooksLabUCSC/flair#modules
+
+
+conda/bioconda won't install due to conflicts
+https://bioconda.github.io/recipes/flair/README.html
+
+
+
+=>  docker:  docker pull quay.io/biocontainers/flair:<tag>
+
+(see flair/tags for valid values for <tag>)
+
+ be sure to avoid the version with security issues

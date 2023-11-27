@@ -1,0 +1,5 @@
+docker run -ti  \
+-v /diskmnt/Projects/Nanopore_analysis:/diskmnt/Projects/Nanopore_analysis \
+-v /diskmnt/Projects/Nanopore_primary:/diskmnt/Projects/Nanopore_primary \
+ quay.io/biocontainers/flair:1.5--3 /bin/bash
+

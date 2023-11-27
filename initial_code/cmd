@@ -1,0 +1,31 @@
+READS=/diskmnt/Projects/Nanopore_primary/derived/fastq_pass/MD-19_Lib2_HG00741_crisper_pangenome-20210527_1750_X1_FAN06084_b18ebbef/FAN06084_pass_d5ca1046_all.fastq
+SAMPLE=MD-19_Lib2_HG00741_crisper_pangenome
+
+flair.py align -g  /diskmnt/Projects/Nanopore_analysis/rmashl/reference/genome/GRCh38.d1.vd1.fa  -t 20  -v1.3   -r $READS
+
+flair.py correct -q flair.aligned.bed  -f /diskmnt/Projects/Nanopore_analysis/rmashl/reference/annotation/gencode.v36.annotation.gtf \
+  -g   /diskmnt/Projects/Nanopore_analysis/rmashl/reference/genome/GRCh38.d1.vd1.fa \
+     -t 20
+
+
+rm -rf tmpdir.collapse
+mkdir -p tmpdir.collapse
+
+flair.py collapse \
+  -g   /diskmnt/Projects/Nanopore_analysis/rmashl/reference/genome/GRCh38.d1.vd1.fa \
+    -r $READS  \
+      -q flair.aligned.bed \
+         -f /diskmnt/Projects/Nanopore_analysis/rmashl/reference/annotation/gencode.v36.annotation.gtf \
+           -t 20 \
+             --temp_dir tmpdir.collapse
+
+
+cat > reads_manifest.tsv <<EOF
+$SAMPLE                  conditionA batch1  $READS
+EOF
+
+rm -rf tmpdir.quantify
+mkdir -p tmpdir.quantify
+
+flair.py quantify -r reads_manifest.tsv -i flair.collapse.isoforms.fa  -t 16   --tpm   --temp_dir  tmpdir.quantify
+

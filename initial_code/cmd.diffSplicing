@@ -1,0 +1,1 @@
+flair.py  diffSplice -i flair.collapse.isoforms.bed  -q counts_matrix.tsv
