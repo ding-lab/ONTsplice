@@ -54,7 +54,7 @@ $cyan [9]  run fsm
 $cyan [10]  re-run step espresso 3 based fsm results
 $cyan [11]  merge per chr results from 10 espresso results
 $red [12] run rmats
-$normal [13] merge bams and output novel transcript
+$normal [13] generate summary report
 
 OUT
 
@@ -250,6 +250,11 @@ if ($step_number == 11)
 if ($step_number == 12)
                 {
     &bsub_run_rmats(1);  
+                }
+
+if ($step_number == 13)
+                {
+    &bsub_summary_report(1);  
                 }
 
 
@@ -820,4 +825,30 @@ sub bsub_run_rmats{
     print $bsub_com;
     system ($bsub_com);    
 
+}
+
+sub bsub_summary_report{
+
+   my $outdir_sum =$dir_output."/summary"; 
+
+    if(!-d $outdir_sum)
+    {
+        `mkdir $outdir_sum`;
+    }
+
+    $current_job_file = "j13_summary_report".".sh"; 
+    my $lsf_out=$lsf_file_dir."/".$current_job_file.".out";
+    my $lsf_err=$lsf_file_dir."/".$current_job_file.".err";
+
+    `rm $lsf_out`;
+    `rm $lsf_err`;
+    open(SUMMARY, ">$job_files_dir/$current_job_file") or die $!;
+    print SUMMARY "#!/bin/bash\n";
+    print SUMMARY "RUNDIR=".$dir_output."\n";
+    print SUMMARY "     ".$run_perl_script_path."generate_summary.pl \${RUNDIR} $f_gtf\n";
+    close SUMMARY;
+    my $sh_file=$job_files_dir."/".$current_job_file;
+    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
+    print $bsub_com;
+    system ($bsub_com);      
 }

@@ -46,7 +46,7 @@ Step2: Type the coommand line: perl ontsplice.ps.pl  --rdir --ref --log --q --gr
 
 [12] run rmats
 
-[13] merge bams and output novel transcript
+[13] generate summary report
 
 
 Example for running scripts:
