@@ -9,7 +9,7 @@ my ($dir_in,$f_db_gtf)=@ARGV;
 
 my $f = $dir_in."/rmats-long-fsm/differential_transcripts_filtered.tsv";
 my $f_ab = $dir_in."/espresso/merged_fsm_N2_R2_abundance.esp";
-my $f_ab_out=$dir_in."/summary/differential_transcripts_filtered.gn.abundance.tsv";
+my $f_ab_out=$dir_in."/summary/differential_transcripts_filtered.gn.nmd.abundance.tsv";
 my $f_sqanti_nmd=$dir_in."/sqanti/merged_N2_R0_updated_classification.txt";
 
 #$f="/storage1/fs1/dinglab/Active/Projects/scao/scor/analysis/run3/outputs/sqanti/merged_N2_R0_updated_classification.txt"; foreach $l (`cat $f`) { $ltr=$l; chomp($ltr); if($ltr=~/^isoform/) {  next; } else { @t=split("\t",$ltr); $nmd{$t[0]}=$t[36]; }} 
