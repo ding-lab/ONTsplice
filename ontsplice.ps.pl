@@ -320,7 +320,7 @@ sub bsub_split_bam{
 ## run espresso step 1
 sub bsub_espresso_1{
 
-    my $dir_espresso=$dir_output."/espresso2"; 
+    my $dir_espresso=$dir_output."/espresso"; 
 
     if(!-d $dir_espresso)
     {
