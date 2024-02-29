@@ -411,7 +411,7 @@ sub bsub_espresso_2{
         chomp($ltr);
         my @t=split("\t",$ltr);
         my $sample_id=$t[2];
-        $current_job_file = "j3_espresso_2_".$sample_id.".$chr1.".".sh"; 
+        $current_job_file = "j3_espresso_2_".$sample_id.".$chr1."."sh"; 
         my $lsf_out=$lsf_file_dir."/".$current_job_file.".out";
         my $lsf_err=$lsf_file_dir."/".$current_job_file.".err";
        `rm $lsf_out`;
