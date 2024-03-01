@@ -310,7 +310,7 @@ sub bsub_split_bam{
         print SPLITBAM "echo \"\${RUNDIR}/$chr1.bam $sample_name\" | awk \'OFS=\"\\t\"\{print \$1,\$2\}\' >> $input_tsv","\n";
         close SPLITBAM;
         my $sh_file=$job_files_dir."/".$current_job_file;
-        $bsub_com = "bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(chrisamiller/genomic-analysis:0.2)\' -o $lsf_out -e $lsf_err bash $sh_file\n";
+        $bsub_com = "bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(chrisamiller/genomic-analysis:0.2)\' -o $lsf_out -e $lsf_err bash $sh_file\n";
         print $bsub_com;
         system ($bsub_com);
     }
@@ -370,7 +370,7 @@ sub bsub_espresso_1{
         close EXPRESSO1;
         my $sh_file=$job_files_dir."/".$current_job_file;
        # $bsub_com = "bsub -g /$compute_username/$group_name -q $q_name -n 8 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L ${input_tsv} -F $h38_REF -A $f_gtf -O ${outdir}/${base} -T 4\"","\n";
-       $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>100000] rusage[mem=100000]\" -M 100000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+       $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>100G] rusage[mem=100G]\" -M 100G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
        #$bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L $input_tsv -F $h38_REF -A $f_gtf -O $RUNDIR -T 4\"","\n"; 
        print $bsub_com;
        system ($bsub_com);
@@ -430,7 +430,7 @@ sub bsub_espresso_2{
         close EXPRESSO2;
         my $sh_file=$job_files_dir."/".$current_job_file;
        # $bsub_com = "bsub -g /$compute_username/$group_name -q $q_name -n 8 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L ${input_tsv} -F $h38_REF -A $f_gtf -O ${outdir}/${base} -T 4\"","\n";
-       $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>100000] rusage[mem=100000]\" -M 100000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+       $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>100G] rusage[mem=100G]\" -M 100G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
        #$bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L $input_tsv -F $h38_REF -A $f_gtf -O $RUNDIR -T 4\"","\n"; 
        print $bsub_com;
        system ($bsub_com);
@@ -484,7 +484,7 @@ sub bsub_espresso_3{
         print EXPRESSO3 "source activate env && perl /bin/espresso/src/ESPRESSO_Q.pl -L $input_update_tsv -A $f_gtf -V \${ISOFORM} -T 4","\n";
         close EXPRESSO3;
         my $sh_file=$job_files_dir."/".$current_job_file;
-        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
         print $bsub_com;
        system ($bsub_com);
     }        
@@ -516,7 +516,7 @@ sub bsub_merge_espresso{
     print MERGE "     ".$run_perl_script_path."merge_espresso.pl \${RUNDIR} $chr_status\n";
     close MERGE;
     my $sh_file=$job_files_dir."/".$current_job_file;
-    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
+    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
     print $bsub_com;
     system ($bsub_com);         
 
@@ -556,7 +556,7 @@ sub bsub_sqanti{
         close SQANTI;
         my $sh_file=$job_files_dir."/".$current_job_file;
        # $bsub_com = "bsub -g /$compute_username/$group_name -q $q_name -n 8 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L ${input_tsv} -F $h38_REF -A $f_gtf -O ${outdir}/${base} -T 4\"","\n";
-       $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(chrisamiller/sqanti3:v5.1.2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+       $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(chrisamiller/sqanti3:v5.1.2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
        #$bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L $input_tsv -F $h38_REF -A $f_gtf -O $RUNDIR -T 4\"","\n"; 
        print $bsub_com;
        system ($bsub_com);
@@ -608,7 +608,7 @@ sub bsub_re_espresso{
         print ESPR "source activate env && perl /bin/espresso/src/ESPRESSO_Q.pl -L $input_update_tsv -O \${RUNDIRfilter} -A \${filtergtfout} --read_ratio_cutoff 2 -V \${ISOFORM} -T 4","\n";
         close ESPR;
         my $sh_file=$job_files_dir."/".$current_job_file;
-        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
         print $bsub_com;
         system ($bsub_com);
     }        
@@ -640,7 +640,7 @@ sub bsub_merge_espresso_filter{
     print MERGE "     ".$run_perl_script_path."merge_espresso_filter.pl \${RUNDIR} $chr_status\n";
     close MERGE;
     my $sh_file=$job_files_dir."/".$current_job_file;
-    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
+    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
     print $bsub_com;
     system ($bsub_com);         
 
@@ -693,7 +693,7 @@ sub bsub_filter_isoform{
         print FILTER "     ".$run_perl_script_path."remove_nonfsm_data.pl \${ISOFORM} \${RUNDIR} $input_update_tsv","\n";
         close FILTER;
         my $sh_file=$job_files_dir."/".$current_job_file;
-        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(chrisamiller/docker-genomic-analysis:latest)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
+        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(chrisamiller/docker-genomic-analysis:latest)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
         print $bsub_com;
         system ($bsub_com); 
 
@@ -744,7 +744,7 @@ sub bsub_re2_espresso{
         print ESPR2 "source activate env && perl /bin/espresso/src/ESPRESSO_Q.pl -L $input_update_tsv -O \${RUNDIRfsm} -A \${filtergtfout} --read_ratio_cutoff 2 -V \${ISOFORM} -T 4","\n";
         close ESPR2;
         my $sh_file=$job_files_dir."/".$current_job_file;
-        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
         print $bsub_com;
         system ($bsub_com);
     }        
@@ -773,7 +773,7 @@ sub bsub_merge_fsm{
     print MERGEFSM "     ".$run_perl_script_path."merge_fsm.pl \${RUNDIR} $chr_status\n";
     close MERGEFSM;
     my $sh_file=$job_files_dir."/".$current_job_file;
-    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
+    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
     print $bsub_com;
     system ($bsub_com);         
 
@@ -821,7 +821,7 @@ sub bsub_run_rmats{
     print RMATS "source activate /docker_data/rMATS-long/conda_env && cd /docker_data/rMATS-long/scripts/ && python rmats_long.py --abundance \${espresso_abundance} --updated-gtf \${espresso_gtf} --gencode-gtf $f_gtf --group-1 $outdir_rmats/group1.txt --group-2 $outdir_rmats/group2.txt --group-1-name group1 --group-2-name group2 --out-dir $outdir_rmats --num-threads 16 --delta-proportion 0.1 --adj-pvalue 0.1 --plot-file-type .pdf","\n";
     close RMATS;
     my $sh_file=$job_files_dir."/".$current_job_file;
-    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 16 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/rmats_long:v3)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 16 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(sridnona/rmats_long:v3)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
     print $bsub_com;
     system ($bsub_com);    
 
@@ -848,7 +848,7 @@ sub bsub_summary_report{
     print SUMMARY "     ".$run_perl_script_path."generate_summary.pl \${RUNDIR} $f_gtf\n";
     close SUMMARY;
     my $sh_file=$job_files_dir."/".$current_job_file;
-    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
+    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
     print $bsub_com;
     system ($bsub_com);      
 }
