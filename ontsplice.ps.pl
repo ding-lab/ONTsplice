@@ -800,9 +800,17 @@ sub bsub_run_rmats{
 
     foreach my $s (`ls $run_dir`)
     {
-        my $str=$s; chomp($str); 
+        my $str=$s; chomp($str);
+        if($run_dir=~/S34F_DMSO-S34F_SMG1/ || $run_dir=~/S34F_DMSO-WT_SMG1/ || $run_dir=~/S34F_SMG1-WT_DMSO/ || $run_dir=~/WT_DMSO-WT_SMG1/)
+        {
         if($str=~/DMSO/) { print OUT "g1","\t",$str,"\t",$run_dir."/".$str."/".$str.".bam","\n"; }
         if($str=~/SMG1/) { print OUT "g2","\t",$str,"\t",$run_dir."/".$str."/".$str.".bam","\n"; }
+        }
+        if($run_dir=~/S34F_SMG1-WT_SMG1/ || $run_dir=~/S34F_DMSO-WT_DMSO/)
+        {
+        if($str=~/WT/) { print OUT "g1","\t",$str,"\t",$run_dir."/".$str."/".$str.".bam","\n"; }
+        if($str=~/S34F/) { print OUT "g2","\t",$str,"\t",$run_dir."/".$str."/".$str.".bam","\n"; }
+        } 
     }   
     close OUT; 
 
