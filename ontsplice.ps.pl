@@ -390,6 +390,8 @@ sub bsub_espresso_2{
     }
 
     my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
+
+    #my @chrlist=("20","21","22"); 
     #my @chrlist=("1");
   #  my @chrlist=("10","20");
 
@@ -448,7 +450,7 @@ sub bsub_espresso_3{
     }
 
      my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
-    
+     #my @chrlist=("20","21","22");   
     #my @chrlist=("1");
 
     foreach my $chr (@chrlist)
@@ -801,7 +803,7 @@ sub bsub_run_rmats{
     foreach my $s (`ls $run_dir`)
     {
         my $str=$s; chomp($str);
-        if($run_dir=~/S34F_DMSO-S34F_SMG1/ || $run_dir=~/S34F_DMSO-WT_SMG1/ || $run_dir=~/S34F_SMG1-WT_DMSO/ || $run_dir=~/WT_DMSO-WT_SMG1/)
+        if($run_dir=~/S34F_DMSO-S34F_SMG1/ || $run_dir=~/S34F_DMSO-WT_SMG1/ || $run_dir=~/S34F_SMG1-WT_DMSO/ || $run_dir=~/WT_DMSO-WT_SMG1/ || $run_dir=~/K562-12/)
         {
         if($str=~/DMSO/) { print OUT "g1","\t",$str,"\t",$run_dir."/".$str."/".$str.".bam","\n"; }
         if($str=~/SMG1/) { print OUT "g2","\t",$str,"\t",$run_dir."/".$str."/".$str.".bam","\n"; }
