@@ -547,10 +547,13 @@ sub bsub_sqanti{
         my $dirsqanti=$dir_output."/sqanti"; 
         my $dirml=$dir_output."/sqanti/filter_ml_default"; 
 
-        if(!-d $dirsqanti)
+        
+        if(-d $dirsqanti)
         {
-          `mkdir $dirsqanti`; 
+            `rm -rf $dirsqanti`; 
         }
+        
+        `mkdir $dirsqanti`; 
 
         open(SQANTI, ">$job_files_dir/$current_job_file") or die $!;
         print SQANTI "#!/bin/bash\n";
