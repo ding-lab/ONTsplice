@@ -398,12 +398,16 @@ sub bsub_espresso_2{
     foreach my $chr (@chrlist)
     {
     	my $chr1=$chr;
-   
+    
         if($chr_status==1) 
 		{ 
 		$chr1="chr".$chr; 
         }
 
+        my $f_espresso_out=$dir_output."/espresso/".$chr1."/bam_N2_R0_updated.gtf";
+        if(!(-s $f_espresso_out))
+        {
+         print $f_espresso_out," is not existing\n"; 
         my $input_tsv=$dir_input."/".$chr1.".bam.tsv";
         my $input_update_tsv=$dir_output."/espresso/".$chr1."/".$chr1.".bam.tsv.updated"; 
         ## loop each sample
@@ -436,8 +440,10 @@ sub bsub_espresso_2{
        #$bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L $input_tsv -F $h38_REF -A $f_gtf -O $RUNDIR -T 4\"","\n"; 
        print $bsub_com;
        system ($bsub_com);
+        }
     }        
-}
+  }
+
 }
 ## run espresso step 3
 sub bsub_espresso_3{
@@ -572,7 +578,8 @@ sub bsub_re_espresso{
     {
         `mkdir $dir_espresso`;
     }
-    my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
+    #my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
+    my @chrlist=("20","21","22");   
    # my @chrlist=("1");
     foreach my $chr (@chrlist)
     {
