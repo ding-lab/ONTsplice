@@ -455,10 +455,10 @@ sub bsub_espresso_3{
         `mkdir $dir_espresso`;
     }
 
-     my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
+    # my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
      #my @chrlist=("20","21","22");   
     #my @chrlist=("1");
-
+    
     foreach my $chr (@chrlist)
     {
     	my $chr1=$chr;
@@ -467,7 +467,10 @@ sub bsub_espresso_3{
 		{ 
 		$chr1="chr".$chr; 
         }
-    
+
+        my $f_espresso_out=$dir_output."/espresso/".$chr1."/bam_N2_R0_updated.gtf";
+        if(!(-s $f_espresso_out))
+        {    
        # $current_job_file = "j4_espresso_3_inputs.".".$chr1.".sh"; 
         $current_job_file = "j4_espresso_3_".$chr1.".sh"; 
         my $lsf_out=$lsf_file_dir."/".$current_job_file.".out";
@@ -492,10 +495,11 @@ sub bsub_espresso_3{
         print EXPRESSO3 "source activate env && perl /bin/espresso/src/ESPRESSO_Q.pl -L $input_update_tsv -A $f_gtf -V \${ISOFORM} -T 4","\n";
         close EXPRESSO3;
         my $sh_file=$job_files_dir."/".$current_job_file;
-        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>100G] rusage[mem=100G]\" -M 30G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
         print $bsub_com;
        system ($bsub_com);
-    }        
+    }   
+    }     
 
 }
 
