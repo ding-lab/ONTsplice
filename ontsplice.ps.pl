@@ -455,10 +455,10 @@ sub bsub_espresso_3{
         `mkdir $dir_espresso`;
     }
 
-    # my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
+     my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
      #my @chrlist=("20","21","22");   
     #my @chrlist=("1");
-    
+
     foreach my $chr (@chrlist)
     {
     	my $chr1=$chr;
@@ -495,7 +495,7 @@ sub bsub_espresso_3{
         print EXPRESSO3 "source activate env && perl /bin/espresso/src/ESPRESSO_Q.pl -L $input_update_tsv -A $f_gtf -V \${ISOFORM} -T 4","\n";
         close EXPRESSO3;
         my $sh_file=$job_files_dir."/".$current_job_file;
-        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>100G] rusage[mem=100G]\" -M 30G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>100G] rusage[mem=100G]\" -M 100G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
         print $bsub_com;
        system ($bsub_com);
     }   
@@ -571,7 +571,7 @@ sub bsub_sqanti{
         close SQANTI;
         my $sh_file=$job_files_dir."/".$current_job_file;
        # $bsub_com = "bsub -g /$compute_username/$group_name -q $q_name -n 8 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L ${input_tsv} -F $h38_REF -A $f_gtf -O ${outdir}/${base} -T 4\"","\n";
-       $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(chrisamiller/sqanti3:v5.1.2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+       $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>100G] rusage[mem=100G]\" -M 100G -a \'docker(chrisamiller/sqanti3:v5.1.2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
        #$bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L $input_tsv -F $h38_REF -A $f_gtf -O $RUNDIR -T 4\"","\n"; 
        print $bsub_com;
        system ($bsub_com);
@@ -585,9 +585,9 @@ sub bsub_re_espresso{
     {
         `mkdir $dir_espresso`;
     }
-    #my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
-    my @chrlist=("20","21","22");   
-   # my @chrlist=("1");
+    my @chrlist=("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y");
+    #my @chrlist=("20","21","22");   
+    # my @chrlist=("1");
     foreach my $chr (@chrlist)
     {
     	my $chr1=$chr;
@@ -624,7 +624,7 @@ sub bsub_re_espresso{
         print ESPR "source activate env && perl /bin/espresso/src/ESPRESSO_Q.pl -L $input_update_tsv -O \${RUNDIRfilter} -A \${filtergtfout} --read_ratio_cutoff 2 -V \${ISOFORM} -T 4","\n";
         close ESPR;
         my $sh_file=$job_files_dir."/".$current_job_file;
-        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
+        $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 4 -R \"select[mem>100G] rusage[mem=100G]\" -M 100G -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash $sh_file\n"; 
         print $bsub_com;
         system ($bsub_com);
     }        
@@ -656,7 +656,7 @@ sub bsub_merge_espresso_filter{
     print MERGE "     ".$run_perl_script_path."merge_espresso_filter.pl \${RUNDIR} $chr_status\n";
     close MERGE;
     my $sh_file=$job_files_dir."/".$current_job_file;
-    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
+    $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>100G] rusage[mem=100G]\" -M 100G -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
     print $bsub_com;
     system ($bsub_com);         
 
