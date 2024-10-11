@@ -800,10 +800,12 @@ sub bsub_run_rmats{
     my $outdir_rmats=$dir_output."/rmats-long-fsm"; 
     my $dir_espresso=$dir_output."/espresso"; 
 
-    if(!-d $outdir_rmats)
+    if(-d $outdir_rmats)
     {
-        `mkdir $outdir_rmats`;
+        `rm -rf $outdir_rmats`;
     }
+
+   `mkdir $outdir_rmats`;
 
     $current_job_file = "j12_rmats_long".".sh"; 
     my $lsf_out=$lsf_file_dir."/".$current_job_file.".out";
@@ -870,6 +872,7 @@ sub bsub_summary_report{
     print SUMMARY "#!/bin/bash\n";
     print SUMMARY "RUNDIR=".$dir_output."\n";
     print SUMMARY "     ".$run_perl_script_path."generate_summary.pl \${RUNDIR} $f_gtf\n";
+    print SUMMARY "     ".$run_perl_script_path."generate_summary.nofilter.pl \${RUNDIR} $f_gtf\n";
     close SUMMARY;
     my $sh_file=$job_files_dir."/".$current_job_file;
     $bsub_com = "LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30G] rusage[mem=30G]\" -M 30G -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err sh $sh_file\n"; 
