@@ -47,7 +47,7 @@ $green [2]  Run espresso 1
 $green [3]  Run espresso 2
 $green [4]  Run espresso 3
 $yellow [5]  Merge espresso results from different chrs
-$yellow [6]  run sqanti
+$yellow [6]  run sqanti based on short read bam and junction files
 $yellow [7]  re-run step espresso 3 by using new filtered gtf file from sqanti
 $yellow [8]  merge filtered espresso results
 $cyan [9]  run fsm 
@@ -353,8 +353,6 @@ sub bsub_espresso_1{
         `mkdir $RUNDIR`;    
         }
 
-
-
         open(EXPRESSO1, ">$job_files_dir/$current_job_file") or die $!;
         print EXPRESSO1 "#!/bin/bash\n";
         print EXPRESSO1 "RUNDIR=".$dir_espresso."/"."$chr1\n";
@@ -534,40 +532,60 @@ sub bsub_merge_espresso{
 
 }
 
-#mkdir $scratch/outputs/sqanti
-#LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -G compute-timley -J sqanti -oo $scratch/logs/sqanti_qc.log -n 8 -R"select[mem>32G] rusage[mem=32G] span[hosts=1]" -M 32G -q siteman -a "docker(chrisamiller/sqanti3:v5.1.2)" /bin/bash -c "source activate SQANTI3.env && /app/SQANTI3-5.1.2/sqanti3_qc.py -t 8 -d $scratch/outputs/sqanti $scratch/outputs/merged_N2_R0_updated.gtf $gtf $reffasta"
-#/storage1/fs1/timley/Active/aml_ppg/src/utilities/bwait -n sqanti -s 60
+# starsjs=$(cat $star_sjouts | perl -pe 's/\n/,/g' | perl -pe 's/,$//g') #create comma-sep input
+# mkdir $scratch/tmp
+# count=1;
+# cat $star_sjouts | while read i;do 
+#     cp $i $scratch/tmp/$count.SJ.out.tab;
+#     count=$((count+1));
+# done
+# star_sjouts=$scratch/tmp
+# LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -G compute-timley -J sqanti -oo $scratch/logs/sqanti_qc.log -n 8 -R"select[mem>32G] rusage[mem=32G] span[hosts=1]" -M 32G -q siteman -a "docker(chrisamiller/sqanti3:v5.2.1)" /bin/bash -c "source activate SQANTI3.env && /app/SQANTI3-5.2.1/sqanti3_qc.py -t 8 -d $scratch/outputs/sqanti -c $scratch/tmp --SR_bam $star_bams $scratch/outputs/merged_N2_R0_updated.gtf $gtf $reffasta"
+# /storage1/fs1/timley/Active/aml_ppg/src/utilities/bwait -n sqanti -s 60 -d 30
 
-#run sqanti filtering using the machine-learning approach
-#LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -G compute-timley -J sqanti -oo $scratch/logs/sqanti_filter.log -n 8 -R"select[mem>32G] rusage[mem=32G] span[hosts=1]" -M 32G -q siteman -a "docker(chrisamiller/sqanti3:v5.1.2)" /bin/bash -c "source activate SQANTI3.env && /app/SQANTI3-5.1.2/sqanti3_filter.py ML $scratch/outputs/sqanti/merged_N2_R0_updated_classification.txt --gtf $scratch/outputs/sqanti/merged_N2_R0_updated_corrected.gtf -d $scratch/outputs/sqanti/filter_ml_default"
-#/storage1/fs1/timley/Active/aml_ppg/src/utilities/bwait -n sqanti -s 60
+# #run sqanti filtering using the machine-learning approach
+# LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -G compute-timley -J sqanti -oo $scratch/logs/sqanti_filter.log -n 8 -R"select[mem>32G] rusage[mem=32G] span[hosts=1]" -M 32G -q siteman -a "docker(chrisamiller/sqanti3:v5.2.1)" /bin/bash -c "source activate SQANTI3.env && /app/SQANTI3-5.2.1/sqanti3_filter.py ml $scratch/outputs/sqanti/merged_N2_R0_updated_classification.txt --gtf $scratch/outputs/sqanti/merged_N2_R0_updated_corrected.gtf -d $scratch/outputs/sqanti/filter_ml_default"
 
 sub bsub_sqanti{
-        
+     
         $current_job_file = "j6_sqanti".".sh"; 
+
         my $lsf_out=$lsf_file_dir."/".$current_job_file.".out";
         my $lsf_err=$lsf_file_dir."/".$current_job_file.".err";
         my $dir_espresso=$dir_output."/espresso"; 
+        my $f_sj=$run_dir."/sj_input_shortread.tsv"; 
+        my $f_star_bam=$run_dir."/bam_input_shortread.tsv"; 
         my $dirsqanti=$dir_output."/sqanti"; 
         my $dirml=$dir_output."/sqanti/filter_ml_default"; 
+        my $dirtmp=$dir_output."/tmp";
 
-        
+        my $count = 0;
+
+        open(my $fh, "<", $f_sj) or die "Cannot open $f_sj: $!";
+        while (my $f = <$fh>) {
+        chomp($f);
+        my $f_out = "$dirtmp/$count.SJ.out.tab";
+        if (-e $f) {
+            system("cp", $f, $f_out);
+        }
+        $count++;
+        }
+        close $fh;  
+
         if(-d $dirsqanti)
         {
             `rm -rf $dirsqanti`; 
-        }
-        
+        } 
         `mkdir $dirsqanti`; 
-
+        
         open(SQANTI, ">$job_files_dir/$current_job_file") or die $!;
         print SQANTI "#!/bin/bash\n";
         print SQANTI "RUNDIR=".$dir_espresso."\n";
         print SQANTI "mergedgtf=".$dir_espresso."/merged_N2_R0_updated.gtf","\n";
         print SQANTI "correctedgtf=".$dirsqanti."/merged_N2_R0_updated_corrected.gtf","\n";
-        print SQANTI "mlgtf=".$dirsqanti."/merged_N2_R0_updated_classification.txt","\n";
-
-        print SQANTI "source activate SQANTI3.env &&  /app/SQANTI3-5.1.2/sqanti3_qc.py -t 4 -d $dirsqanti \${mergedgtf} $f_gtf $h38_REF","\n";
-        print SQANTI "source activate SQANTI3.env && /app/SQANTI3-5.1.2/sqanti3_filter.py ML \${mlgtf} --gtf \${correctedgtf} -d $dirml","\n"; 
+        print SQANTI "mlgtf=".$dirsqanti."/merged_N2_R0_updated_classification.txt","\n"; 
+        print SQANTI "source activate SQANTI3.env &&  /app/SQANTI3-5.1.2/sqanti3_qc.py -t 4 -d $dirsqanti -c $dirtmp --SR_bam $f_star_bam \${mergedgtf} $f_gtf $h38_REF","\n";
+        print SQANTI "source activate SQANTI3.env && /app/SQANTI3-5.1.2/sqanti3_filter.py ml \${mlgtf} --gtf \${correctedgtf} -d $dirml","\n"; 
         close SQANTI;
         my $sh_file=$job_files_dir."/".$current_job_file;
        # $bsub_com = "bsub -g /$compute_username/$group_name -q $q_name -n 8 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(sridnona/espresso:v2)\' -o $lsf_out -e $lsf_err /bin/bash -c \"source activate env && perl /bin/espresso/src/ESPRESSO_S.pl -L ${input_tsv} -F $h38_REF -A $f_gtf -O ${outdir}/${base} -T 4\"","\n";
