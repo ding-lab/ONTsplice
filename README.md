@@ -1,4 +1,4 @@
-# ONTsplice version 1.0 , compute1 #
+# ONTsplice version 1.2 , compute1 #
 
 Detect differential transcripts between case and control from ONT data. 
 
