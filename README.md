@@ -18,7 +18,7 @@ export LSF_DOCKER_VOLUMES="$STORAGE1:$STORAGE1 $STORAGE2:$STORAGE2"
 
 Step1: Enter the directory where you downloaded ONTsplice pipeline 
 
-Step2: Type the coommand line: perl ontsplice.ps.pl  --rdir --ref --log --q --groupname --users --step
+Step2: Type the coommand line: perl ontsplice.pl  --rdir --ref --log --q --groupname --users --step
 
 [0] pre-process bam
 
