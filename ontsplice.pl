@@ -566,7 +566,7 @@ sub bsub_sqanti{
         open(my $fh, "<", $f_sj) or die "Cannot open $f_sj: $!";
         while (my $f = <$fh>) {
         chomp($f);
-        print($f),"\n"; 
+        print $f,"\n"; 
 
         my $f_out = "$dirtmp/$count.SJ.out.tab";
         if (-e $f) {
